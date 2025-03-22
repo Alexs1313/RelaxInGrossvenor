@@ -1,5 +1,6 @@
 import {
   Image,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -10,10 +11,16 @@ import {
 import ButtonMain from '../../components/ButtonMain';
 import {allProducts} from '../../data/allProducts';
 import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const SofasCategory = () => {
   const [filter, setFilter] = useState(
     allProducts.filter(product => product.category === 'Sofas'),
+  );
+  const navigation = useNavigation();
+
+  const filteredProducts = allProducts.filter(
+    product => product.category === 'Sofas',
   );
 
   const handleFilter = e => {
@@ -30,21 +37,24 @@ const SofasCategory = () => {
         <Text style={styles.title}>Sofas</Text>
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
+            marginHorizontal: 16,
             paddingBottom: 15,
           }}>
-          <TextInput
-            placeholder="Search"
-            placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            style={styles.input}
-            onChangeText={event => handleFilter(event)}
-          />
-          <Image
-            style={{position: 'absolute', left: 35, top: 17}}
-            source={require('../../assets/tabIcons/search.png')}
-          />
+          <View
+            style={{
+              width: '100%',
+            }}>
+            <TextInput
+              placeholder="Search"
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              style={styles.input}
+              onChangeText={event => handleFilter(event)}
+            />
+            <Image
+              style={{position: 'absolute', left: 20, top: 17}}
+              source={require('../../assets/tabIcons/search.png')}
+            />
+          </View>
         </View>
       </SafeAreaView>
 
@@ -57,7 +67,19 @@ const SofasCategory = () => {
         }}>
         {filter.map(prod => (
           <View key={prod.id} style={{width: '48%'}}>
-            <Image source={prod.image} />
+            <Pressable
+              onPress={() => navigation.navigate('ProductDetails', prod)}>
+              <Image
+                source={prod.image}
+                style={{width: '100%', borderRadius: 16, height: 180}}
+              />
+            </Pressable>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={{position: 'absolute', right: 10, top: 10}}>
+              <Image source={require('../../assets/tabIcons/heartFill.png')} />
+            </TouchableOpacity>
+
             <Text style={styles.productTitle}>{prod.title}</Text>
 
             <Text style={styles.productDescription} numberOfLines={1}>
@@ -113,7 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '400',
     color: 'rgba(255, 255, 255, 0.5)',
-    width: '92%',
   },
   productTitle: {
     fontWeight: '500',

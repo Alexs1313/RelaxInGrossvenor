@@ -1,8 +1,13 @@
+import {useNavigation} from '@react-navigation/native';
 import {Text, TouchableOpacity} from 'react-native';
 
-const ButtonMain = ({text}) => {
+const ButtonMain = ({text, navigateTo}) => {
+  const navigation = useNavigation();
+
   return (
     <TouchableOpacity
+      onPress={() => navigation.navigate(navigateTo)}
+      activeOpacity={0.7}
       style={{
         height: 50,
         marginHorizontal: 16,

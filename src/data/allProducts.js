@@ -21,7 +21,7 @@ export const allProducts = [
     title: 'Sofa "Scandinavia"',
     category: 'Sofas',
     description:
-      ' Inspired by Scandinavian design, this sofa features clean lines and natural materials, making it a highlight of your interior. Comfortable seating and a sturdy construction guarantee durability.',
+      'Inspired by Scandinavian design, this sofa features clean lines and natural materials, making it a highlight of your interior. Comfortable seating and a sturdy construction guarantee durability.',
   },
   {
     id: 4,
@@ -121,7 +121,7 @@ export const allProducts = [
   },
   {
     id: 16,
-    image: require('../assets/allProducts/1.png'),
+    image: require('../assets/allProducts/14.png'),
     title: 'Office Chair "Dynamic"',
     category: 'OfficeChairs',
     description:
