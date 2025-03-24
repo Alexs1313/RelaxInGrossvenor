@@ -104,6 +104,7 @@ const Home = () => {
           }}>
           {catalog.map(item => (
             <Pressable
+              key={item.id}
               onPress={() => handlePressCategory(item.id)}
               style={{
                 backgroundColor: '#312C52',
@@ -135,6 +136,7 @@ const Home = () => {
           }}>
           {allProducts.map(prod => (
             <View
+              key={prod.id}
               style={{
                 width: '48%',
                 alignItems: 'center',

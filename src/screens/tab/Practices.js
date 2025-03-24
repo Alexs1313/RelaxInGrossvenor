@@ -16,6 +16,24 @@ import {useNavigation} from '@react-navigation/native';
 const Practices = () => {
   const navigation = useNavigation();
 
+  const trainings = [
+    {
+      id: 1,
+      title: 'Back',
+      image: require('../../assets/trainings/mainBack.png'),
+    },
+    {
+      id: 2,
+      title: 'Legs',
+      image: require('../../assets/trainings/mainLegs.png'),
+    },
+    {
+      id: 3,
+      title: 'Shoulders',
+      image: require('../../assets/trainings/mainBack.png'),
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.header}>
@@ -37,24 +55,15 @@ const Practices = () => {
         <View style={{marginLeft: 16}}>
           <Text style={styles.labelText}>Trainings</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <Pressable
-              style={styles.cardContainer}
-              onPress={() => navigation.navigate('BackTrain')}>
-              <Image source={require('../../assets/trainings/mainBack.png')} />
-              <Text style={styles.cardText}>Back</Text>
-            </Pressable>
-            <Pressable
-              style={styles.cardContainer}
-              onPress={() => navigation.navigate('LegsTrain')}>
-              <Image source={require('../../assets/trainings/mainLegs.png')} />
-              <Text style={styles.cardText}>Legs</Text>
-            </Pressable>
-            <Pressable
-              style={styles.cardContainer}
-              onPress={() => navigation.navigate('ShouldersTrain')}>
-              <Image source={require('../../assets/trainings/mainBack.png')} />
-              <Text style={styles.cardText}>Shoulders</Text>
-            </Pressable>
+            {trainings.map(training => (
+              <Pressable
+                key={training.id}
+                style={styles.cardContainer}
+                onPress={() => navigation.navigate('BackTrain', training)}>
+                <Image source={training.image} />
+                <Text style={styles.cardText}>{training.title}</Text>
+              </Pressable>
+            ))}
           </ScrollView>
         </View>
 
@@ -83,7 +92,10 @@ const Practices = () => {
               </Text>
             </View>
           ))}
-          <ButtonMain text={'Select individually'} />
+          <ButtonMain
+            text={'Select individually'}
+            navigateTo={'IndividualOffer'}
+          />
         </View>
       </ScrollView>
     </View>

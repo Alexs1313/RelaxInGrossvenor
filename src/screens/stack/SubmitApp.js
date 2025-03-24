@@ -1,46 +1,96 @@
 import {
   Image,
+  Keyboard,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import GoBackBtn from '../../components/GoBackBtn';
 import ButtonMain from '../../components/ButtonMain';
 import {allProducts} from '../../data/allProducts';
+import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const SubmitApp = () => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const navigation = useNavigation();
+
+  const allFieldsCompleted = name.trim() === '' || number.trim() === '';
+
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.header}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: 16,
-            marginBottom: 10,
-          }}>
-          <GoBackBtn />
-          <Text style={styles.title}>Submit application</Text>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <SafeAreaView style={styles.header}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginHorizontal: 16,
+              marginBottom: 10,
+            }}>
+            <GoBackBtn />
+            <Text style={styles.title}>Submit application</Text>
+          </View>
+        </SafeAreaView>
+
+        <View style={{marginHorizontal: 16}}>
+          <Text style={styles.productTitle}>Add information about you</Text>
+          <Text style={styles.inputTitle}>Your name</Text>
+          <TextInput
+            placeholder="Task name"
+            placeholderTextColor={'#999999'}
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+          />
+
+          <Text style={styles.inputTitle}>Your phone number</Text>
+          <TextInput
+            placeholder="Task name"
+            placeholderTextColor={'#999999'}
+            style={styles.input}
+            value={number}
+            onChangeText={setNumber}
+            inputMode="numeric"
+          />
         </View>
-      </SafeAreaView>
 
-      <View style={{marginHorizontal: 16}}>
-        <Text style={styles.productTitle}>Add information about you</Text>
-        <Text style={styles.inputTitle}>Your name</Text>
-        <TextInput placeholder="Task name" style={styles.input} />
-
-        <Text style={styles.inputTitle}>Your phone number</Text>
-        <TextInput placeholder="Task name" style={styles.input} />
+        <View style={styles.footer}>
+          <TouchableOpacity
+            disabled={allFieldsCompleted}
+            onPress={() => navigation.navigate('Application')}
+            activeOpacity={0.7}
+            style={{
+              height: 50,
+              marginHorizontal: 16,
+              borderRadius: 16,
+              marginTop: 16,
+              backgroundColor: allFieldsCompleted
+                ? '#393158'
+                : 'rgba(0, 205, 112, 1)',
+              paddingHorizontal: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text
+              style={{
+                color: allFieldsCompleted ? '#999999' : 'rgba(16, 14, 27, 1)',
+                opacity: allFieldsCompleted ? 0.5 : null,
+                fontWeight: '700',
+                fontSize: 16,
+              }}>
+              Offer
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View style={styles.footer}>
-        <ButtonMain text={'Offer'} navigateTo={'Application'} />
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -72,7 +122,7 @@ const styles = StyleSheet.create({
     height: 52,
     fontSize: 17,
     fontWeight: '400',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: '#FFFFFF',
   },
   inputTitle: {
     fontWeight: '400',

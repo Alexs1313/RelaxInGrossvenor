@@ -11,8 +11,6 @@ import SubmitApp from '../screens/stack/SubmitApp';
 import Application from '../screens/stack/Application';
 import ArticleDetails from '../screens/stack/ArticleDetails';
 import BackTrain from '../screens/stack/BackTrain';
-import LegsTrain from '../screens/stack/LegsTrain';
-import ShouldersTrain from '../screens/stack/ShouldersTrain';
 
 const Stack = createStackNavigator();
 
@@ -39,8 +37,6 @@ const StackNav = () => {
       <Stack.Screen name="Application" component={Application} />
       <Stack.Screen name="ArticleDetails" component={ArticleDetails} />
       <Stack.Screen name="BackTrain" component={BackTrain} />
-      <Stack.Screen name="LegsTrain" component={LegsTrain} />
-      <Stack.Screen name="ShouldersTrain" component={ShouldersTrain} />
     </Stack.Navigator>
   );
 };

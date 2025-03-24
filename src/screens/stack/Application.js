@@ -1,8 +1,17 @@
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import GoBackBtn from '../../components/GoBackBtn';
 import ButtonMain from '../../components/ButtonMain';
+import {useNavigation} from '@react-navigation/native';
 
 const Application = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.header}>
@@ -26,7 +35,28 @@ const Application = () => {
       </View>
 
       <View style={styles.footer}>
-        <ButtonMain text={'Offer'} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('TabNav')}
+          activeOpacity={0.7}
+          style={{
+            height: 50,
+            marginHorizontal: 16,
+            borderRadius: 16,
+            marginTop: 16,
+            backgroundColor: 'rgba(0, 205, 112, 1)',
+            paddingHorizontal: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text
+            style={{
+              color: 'rgba(16, 14, 27, 1)',
+              fontWeight: '700',
+              fontSize: 16,
+            }}>
+            Close
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
