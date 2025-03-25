@@ -1,17 +1,17 @@
 import {useState} from 'react';
 import {
   Image,
-  Pressable,
+  Keyboard,
   SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {allProducts} from '../../data/allProducts';
 import ButtonMain from '../../components/ButtonMain';
-import {useNavigation} from '@react-navigation/native';
+import HomeProductCard from '../../components/HomeProductCard';
 
 const MassageChairCategory = () => {
   const [filter, setFilter] = useState(
@@ -21,7 +21,6 @@ const MassageChairCategory = () => {
   const filteredProducts = allProducts.filter(
     product => product.category === 'MassageChairs',
   );
-  const navigation = useNavigation();
 
   const handleFilter = e => {
     setFilter(
@@ -31,75 +30,62 @@ const MassageChairCategory = () => {
     );
   };
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.header}>
-        <Text style={styles.title}>Massage chairs</Text>
-        <View
-          style={{
-            marginHorizontal: 16,
-            paddingBottom: 15,
-          }}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <SafeAreaView style={styles.header}>
+          <Text style={styles.title}>Massage chairs</Text>
           <View
             style={{
-              width: '100%',
+              marginHorizontal: 16,
+              paddingBottom: 15,
             }}>
-            <TextInput
-              placeholder="Search"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              style={styles.input}
-              onChangeText={event => handleFilter(event)}
-            />
-            <Image
-              style={{position: 'absolute', left: 20, top: 17}}
-              source={require('../../assets/tabIcons/search.png')}
-            />
-          </View>
-        </View>
-      </SafeAreaView>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          marginHorizontal: 16,
-        }}>
-        {filter.map(prod => (
-          <View key={prod.id} style={{width: '48%'}}>
-            <Pressable
-              onPress={() => navigation.navigate('ProductDetails', prod)}>
-              <Image
-                source={prod.image}
-                style={{width: '100%', borderRadius: 16, height: 180}}
+            <View
+              style={{
+                width: '100%',
+              }}>
+              <TextInput
+                placeholder="Search"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                style={styles.input}
+                onChangeText={event => handleFilter(event)}
               />
-            </Pressable>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={{position: 'absolute', right: 10, top: 10}}>
-              <Image source={require('../../assets/tabIcons/heartFill.png')} />
-            </TouchableOpacity>
-            <Text style={styles.productTitle}>{prod.title}</Text>
-
-            <Text style={styles.productDescription} numberOfLines={1}>
-              {prod.description}
-            </Text>
+              <Image
+                style={{position: 'absolute', left: 20, top: 17}}
+                source={require('../../assets/tabIcons/search.png')}
+              />
+            </View>
           </View>
-        ))}
-      </View>
+        </SafeAreaView>
 
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          backgroundColor: '#312C52',
-          width: '100%',
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-          height: 115,
-        }}>
-        <ButtonMain text={'Select individually'} />
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            marginHorizontal: 16,
+          }}>
+          {filter.map(prod => (
+            <HomeProductCard prod={prod} key={prod.id} />
+          ))}
+        </View>
+
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            backgroundColor: '#312C52',
+            width: '100%',
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            height: 115,
+          }}>
+          <ButtonMain
+            text={'Select individually'}
+            navigateTo={'IndividualOffer'}
+          />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -132,7 +118,7 @@ const styles = StyleSheet.create({
     height: 52,
     fontSize: 17,
     fontWeight: '400',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: '#fff',
   },
   productTitle: {
     fontWeight: '500',

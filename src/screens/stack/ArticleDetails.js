@@ -3,6 +3,7 @@ import {
   Pressable,
   SafeAreaView,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,11 +12,82 @@ import {
 import GoBackBtn from '../../components/GoBackBtn';
 import ButtonMain from '../../components/ButtonMain';
 import {articles} from '../../data/articles';
+import {useIsFocused} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ArticleCard from '../../components/ArticleCard';
 
 const ArticleDetails = ({route}) => {
   const article = route.params;
-
   const filteredArticle = articles.filter(item => item.id !== article.id);
+
+  const [iconColor, setIconColor] = useState(false);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    renderFavorites(article);
+  }, [isFocused]);
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: article.description,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const addToFavorites = async item => {
+    try {
+      setIconColor(true);
+
+      const jsonValue = await AsyncStorage.getItem('@favoritesArticle');
+      let favoritesList = jsonValue !== null ? JSON.parse(jsonValue) : [];
+
+      const filtered = favoritesList.find(val => val.id === item.id);
+
+      if (!filtered) {
+        favoritesList.push(item);
+      }
+
+      await AsyncStorage.setItem(
+        '@favoritesArticle',
+        JSON.stringify(favoritesList),
+        console.log('add to fav'),
+      );
+    } catch (e) {
+      console.error('Failed to add item to favorites:', e);
+    }
+  };
+
+  const removeFavorites = async item => {
+    setIconColor(false);
+    const jsonValue = await AsyncStorage.getItem('@favoritesArticle');
+    let favoritesList = jsonValue != null ? JSON.parse(jsonValue) : [];
+    const filtered = favoritesList.filter(fav => fav.id !== item.id);
+    await AsyncStorage.setItem('@favoritesArticle', JSON.stringify(filtered));
+    console.log('remove');
+  };
+
+  const renderFavorites = async item => {
+    const jsonValue = await AsyncStorage.getItem('@favoritesArticle');
+    const favoritesList = JSON.parse(jsonValue);
+
+    if (favoritesList != null) {
+      let data = favoritesList.find(fav => fav.id === item.id);
+
+      return data == null ? setIconColor(false) : setIconColor(true);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -45,13 +117,27 @@ const ArticleDetails = ({route}) => {
                 alignItems: 'center',
                 gap: 12,
               }}>
-              <TouchableOpacity activeOpacity={0.7} style={styles.btnContainer}>
+              <TouchableOpacity
+                onPress={onShare}
+                activeOpacity={0.7}
+                style={styles.btnContainer}>
                 <Image source={require('../../assets/tabIcons/share.png')} />
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.7} style={styles.btnContainer}>
-                <Image
-                  source={require('../../assets/tabIcons/greenHeart.png')}
-                />
+              <TouchableOpacity
+                onPress={() =>
+                  iconColor ? removeFavorites(article) : addToFavorites(article)
+                }
+                activeOpacity={0.7}
+                style={styles.btnContainer}>
+                {iconColor ? (
+                  <Image
+                    source={require('../../assets/tabIcons/checkedHeart.png')}
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/tabIcons/heartFill.png')}
+                  />
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -59,27 +145,7 @@ const ArticleDetails = ({route}) => {
 
           <Text style={styles.articleTitle}>Other Articles</Text>
           {filteredArticle.map(article => (
-            <View key={article.id}>
-              <Pressable
-                onPress={() => navigation.navigate('ArticleDetails', article)}>
-                <Image
-                  source={article.image}
-                  style={{width: '100%', height: 180, borderRadius: 16}}
-                />
-              </Pressable>
-
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{position: 'absolute', right: 10, top: 10}}>
-                <Image
-                  source={require('../../assets/tabIcons/heartFill.png')}
-                />
-              </TouchableOpacity>
-              <Text style={styles.articleMainTitle}>{article.title}</Text>
-              <Text numberOfLines={1} style={styles.articleMainDescription}>
-                {article.description}
-              </Text>
-            </View>
+            <ArticleCard article={article} key={article.id} />
           ))}
         </View>
       </ScrollView>

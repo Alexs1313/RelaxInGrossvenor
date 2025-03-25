@@ -1,8 +1,6 @@
 import {
-  Image,
   Keyboard,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -11,8 +9,6 @@ import {
   View,
 } from 'react-native';
 import GoBackBtn from '../../components/GoBackBtn';
-import ButtonMain from '../../components/ButtonMain';
-import {allProducts} from '../../data/allProducts';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 

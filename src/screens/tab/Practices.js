@@ -12,6 +12,7 @@ import ButtonMain from '../../components/ButtonMain';
 import {ScrollView} from 'react-native-gesture-handler';
 import {articles} from '../../data/articles';
 import {useNavigation} from '@react-navigation/native';
+import ArticleCard from '../../components/ArticleCard';
 
 const Practices = () => {
   const navigation = useNavigation();
@@ -70,27 +71,7 @@ const Practices = () => {
         <View style={{marginHorizontal: 16, marginBottom: 120}}>
           <Text style={styles.labelText}>Useful articles</Text>
           {articles.map(article => (
-            <View key={article.id}>
-              <Pressable
-                onPress={() => navigation.navigate('ArticleDetails', article)}>
-                <Image
-                  source={article.image}
-                  style={{width: '100%', height: 180, borderRadius: 16}}
-                />
-              </Pressable>
-
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{position: 'absolute', right: 10, top: 10}}>
-                <Image
-                  source={require('../../assets/tabIcons/heartFill.png')}
-                />
-              </TouchableOpacity>
-              <Text style={styles.articleTitle}>{article.title}</Text>
-              <Text numberOfLines={1} style={styles.articleDescription}>
-                {article.description}
-              </Text>
-            </View>
+            <ArticleCard article={article} key={article.id} />
           ))}
           <ButtonMain
             text={'Select individually'}

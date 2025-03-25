@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import {useEffect, useState} from 'react';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = () => {
@@ -31,12 +31,6 @@ const Profile = () => {
       maxWidth: 600,
     },
   };
-
-  useEffect(() => {
-    if (allFieldsCompleted) {
-      setSave(true);
-    }
-  }, []);
 
   const imagePicker = () => {
     launchImageLibrary(options, response => {
@@ -91,6 +85,10 @@ const Profile = () => {
         setWeight(parsed.weight);
         setImage(parsed.image);
         setChangePhoto(true);
+        if (parsed != null) {
+          setSave(true);
+        }
+
         console.log('parcimg', parsed.image);
       } catch (error) {
         console.log(error);

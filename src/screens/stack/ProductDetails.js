@@ -2,19 +2,85 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import GoBackBtn from '../../components/GoBackBtn';
 import ButtonMain from '../../components/ButtonMain';
 import {allProducts} from '../../data/allProducts';
+import HomeProductCard from '../../components/HomeProductCard';
+import {useIsFocused} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetails = ({route}) => {
   const prod = route.params;
-  console.log(prod);
+
+  const [iconColor, setIconColor] = useState(false);
+  const isFocused = useIsFocused();
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: prod.description,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    renderFavorites(prod);
+  }, [isFocused]);
+
+  const addToFavorites = async item => {
+    try {
+      setIconColor(true);
+
+      const jsonValue = await AsyncStorage.getItem('@favorites');
+      let favoritesList = jsonValue !== null ? JSON.parse(jsonValue) : [];
+
+      const filtered = favoritesList.find(val => val.id === item.id);
+
+      if (!filtered) {
+        favoritesList.push(item);
+      }
+
+      await AsyncStorage.setItem('@favorites', JSON.stringify(favoritesList));
+    } catch (e) {
+      console.error('Failed to add item to favorites:', e);
+    }
+  };
+
+  const removeFavorites = async item => {
+    setIconColor(false);
+    const jsonValue = await AsyncStorage.getItem('@favorites');
+    let favoritesList = jsonValue != null ? JSON.parse(jsonValue) : [];
+    const filtered = favoritesList.filter(fav => fav.id !== item.id);
+    await AsyncStorage.setItem('@favorites', JSON.stringify(filtered));
+  };
+
+  const renderFavorites = async item => {
+    const jsonValue = await AsyncStorage.getItem('@favorites');
+    const favoritesList = JSON.parse(jsonValue);
+
+    if (favoritesList != null) {
+      let data = favoritesList.find(fav => fav.id === item.id);
+
+      return data == null ? setIconColor(false) : setIconColor(true);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -54,11 +120,27 @@ const ProductDetails = ({route}) => {
               alignItems: 'center',
               gap: 12,
             }}>
-            <TouchableOpacity activeOpacity={0.7} style={styles.btnContainer}>
+            <TouchableOpacity
+              onPress={onShare}
+              activeOpacity={0.7}
+              style={styles.btnContainer}>
               <Image source={require('../../assets/tabIcons/share.png')} />
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.7} style={styles.btnContainer}>
-              <Image source={require('../../assets/tabIcons/greenHeart.png')} />
+            <TouchableOpacity
+              onPress={() =>
+                iconColor ? removeFavorites(prod) : addToFavorites(prod)
+              }
+              activeOpacity={0.7}
+              style={styles.btnContainer}>
+              {iconColor ? (
+                <Image
+                  source={require('../../assets/tabIcons/checkedHeart.png')}
+                />
+              ) : (
+                <Image
+                  source={require('../../assets/tabIcons/heartFill.png')}
+                />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -76,34 +158,12 @@ const ProductDetails = ({route}) => {
             justifyContent: 'space-between',
           }}>
           {allProducts.map(prod => (
-            <View
-              style={{
-                width: '48%',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={prod.image}
-                style={{width: '100%', borderRadius: 16, height: 180}}
-              />
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{position: 'absolute', right: 10, top: 10}}>
-                <Image
-                  source={require('../../assets/tabIcons/heartFill.png')}
-                />
-              </TouchableOpacity>
-              <View>
-                <Text style={styles.productTitle}>{prod.title}</Text>
-                <Text style={styles.productDescription} numberOfLines={1}>
-                  {prod.description}
-                </Text>
-              </View>
-            </View>
+            <HomeProductCard prod={prod} key={prod.id} />
           ))}
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <ButtonMain text={'Offer'} />
+        <ButtonMain text={'Offer'} navigateTo={'SubmitApp'} />
       </View>
     </View>
   );

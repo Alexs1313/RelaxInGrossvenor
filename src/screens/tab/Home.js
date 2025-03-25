@@ -1,23 +1,18 @@
 import {
-  Dimensions,
-  FlatList,
   Image,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import {MouseButton, TextInput} from 'react-native-gesture-handler';
+import {TextInput} from 'react-native-gesture-handler';
 import {allProducts} from '../../data/allProducts';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonMain from '../../components/ButtonMain';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+import HomeProductCard from '../../components/HomeProductCard';
 
 const catalog = [
   {id: 1, image: require('../../assets/catalog/sofas.png'), title: 'Sofas'},
@@ -37,8 +32,16 @@ const catalog = [
 const Home = () => {
   const navigation = useNavigation();
   const [filter, setFilter] = useState(allProducts);
+  const [hideCatalog, setHideCatalog] = useState(true);
 
   const handleFilter = e => {
+    console.log(e !== '');
+    if (e !== '') {
+      setHideCatalog(false);
+    } else {
+      setHideCatalog(true);
+    }
+
     setFilter(
       allProducts.filter(product =>
         product.title.toLowerCase().includes(e.toLowerCase()),
@@ -77,7 +80,9 @@ const Home = () => {
               placeholder="Search"
               placeholderTextColor="rgba(255, 255, 255, 0.5)"
               style={styles.input}
-              onChangeText={event => handleFilter(event)}
+              onChangeText={event => {
+                handleFilter(event);
+              }}
             />
             <Image
               style={{position: 'absolute', left: 20, top: 17}}
@@ -92,76 +97,58 @@ const Home = () => {
           </View>
         </View>
       </SafeAreaView>
+
       <ScrollView style={{marginBottom: 100}}>
-        <Text style={styles.catalogText}>Catalog</Text>
-
-        <View
-          style={{
-            marginHorizontal: 16,
-            flexWrap: 'wrap',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {catalog.map(item => (
-            <Pressable
-              key={item.id}
-              onPress={() => handlePressCategory(item.id)}
-              style={{
-                backgroundColor: '#312C52',
-                marginBottom: 10,
-                width: '48%',
-                borderRadius: 12,
-                paddingLeft: 12,
-                height: 200,
-                justifyContent: 'center',
-              }}>
-              <Image
-                source={item.image}
-                style={{
-                  borderRadius: 12,
-                }}
-              />
-
-              <Text style={styles.cardTitle}>{item.title}</Text>
-            </Pressable>
-          ))}
-        </View>
-        <Text style={styles.catalogText}>All Products</Text>
-        <View
-          style={{
-            marginHorizontal: 16,
-            flexWrap: 'wrap',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {allProducts.map(prod => (
+        {hideCatalog && (
+          <View>
+            <Text style={styles.catalogText}>Catalog</Text>
             <View
-              key={prod.id}
               style={{
-                width: '48%',
-                alignItems: 'center',
+                marginHorizontal: 16,
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
               }}>
-              <Image
-                source={prod.image}
-                style={{width: '100%', borderRadius: 16, height: 180}}
-              />
+              {catalog.map(item => (
+                <Pressable
+                  key={item.id}
+                  onPress={() => handlePressCategory(item.id)}
+                  style={{
+                    backgroundColor: '#312C52',
+                    marginBottom: 10,
+                    width: '48%',
+                    borderRadius: 12,
+                    paddingLeft: 12,
+                    height: 200,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={item.image}
+                    style={{
+                      borderRadius: 12,
+                    }}
+                  />
 
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{position: 'absolute', right: 10, top: 10}}>
-                <Image
-                  source={require('../../assets/tabIcons/heartFill.png')}
-                />
-              </TouchableOpacity>
-              <View>
-                <Text style={styles.productTitle}>{prod.title}</Text>
-                <Text style={styles.productDescription} numberOfLines={1}>
-                  {prod.description}
-                </Text>
-              </View>
+                  <Text style={styles.cardTitle}>{item.title}</Text>
+                </Pressable>
+              ))}
             </View>
+          </View>
+        )}
+        <Text style={styles.catalogText}>All Products</Text>
+
+        <View
+          style={{
+            marginHorizontal: 16,
+            flexWrap: 'wrap',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          {filter.map(prod => (
+            <HomeProductCard prod={prod} key={prod.id} />
           ))}
         </View>
+
         <View style={{marginBottom: 20}}>
           <ButtonMain
             text={'Select individually'}
@@ -200,7 +187,7 @@ const styles = StyleSheet.create({
     height: 52,
     fontSize: 17,
     fontWeight: '400',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: '#fff',
     width: '80%',
   },
   heartIcon: {

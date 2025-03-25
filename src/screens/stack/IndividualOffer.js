@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import GoBackBtn from '../../components/GoBackBtn';
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {allProducts} from '../../data/allProducts';
 import ProductCard from '../../components/ProductCard';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -26,6 +26,9 @@ const IndividualOffer = () => {
   const [offer, setOffer] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [randomProducts, setRandomProducts] = useState(() =>
+    allProducts.slice(1, 5).sort(() => Math.random() - 0.5),
+  );
 
   const navigation = useNavigation();
 
@@ -34,7 +37,7 @@ const IndividualOffer = () => {
     {label: 'Female', value: 'Female'},
   ]);
 
-  console.log('selectedQuantity', selectedQuantity);
+  useEffect(() => {});
 
   const allFieldsCompleted =
     gender.trim() === '' ||
@@ -134,8 +137,9 @@ const IndividualOffer = () => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              {allProducts.map(prod => (
+              {randomProducts.map(prod => (
                 <ProductCard
+                  key={prod.id}
                   prod={prod}
                   setSelectedQuantity={setSelectedQuantity}
                 />

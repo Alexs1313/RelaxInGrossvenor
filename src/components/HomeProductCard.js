@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import {
   Image,
@@ -10,11 +10,10 @@ import {
   View,
 } from 'react-native';
 
-const ProductCard = ({prod, setSelectedQuantity}) => {
-  const [selectedProduct, setSelectedProduct] = useState(false);
-
+const HomeProductCard = ({prod}) => {
   const [iconColor, setIconColor] = useState(false);
   const isFocused = useIsFocused();
+  const navigation = useNavigation();
 
   useEffect(() => {
     renderFavorites(prod);
@@ -59,7 +58,8 @@ const ProductCard = ({prod, setSelectedQuantity}) => {
   };
 
   return (
-    <View
+    <Pressable
+      onPress={() => navigation.navigate('ProductDetails', prod)}
       key={prod.id}
       style={{
         width: '48%',
@@ -82,40 +82,25 @@ const ProductCard = ({prod, setSelectedQuantity}) => {
           <Image source={require('../assets/tabIcons/heartFill.png')} />
         )}
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedProduct(true);
-          if (!selectedProduct) {
-            setSelectedQuantity(prev => prev + 1);
-          }
-        }}
-        activeOpacity={0.6}
-        style={{position: 'absolute', left: 10, top: 10}}>
-        {selectedProduct ? (
-          <Image source={require('../assets/tabIcons/checkbox.png')} />
-        ) : (
-          <Image source={require('../assets/tabIcons/checkboxEmpty.png')} />
-        )}
-      </TouchableOpacity>
       <View>
-        <Text style={styles.productListTitle}>{prod.title}</Text>
+        <Text style={styles.productTitle}>{prod.title}</Text>
         <Text style={styles.productDescription} numberOfLines={1}>
           {prod.description}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
+
 const styles = StyleSheet.create({
   productTitle: {
-    fontWeight: '700',
-    fontSize: 23,
+    fontWeight: '500',
+    fontSize: 14,
     color: '#fff',
     paddingBottom: 4,
-    marginTop: 24,
-    marginBottom: 12,
+    paddingLeft: 8,
+    marginTop: 8,
   },
-
   productDescription: {
     color: 'rgba(255, 255, 255, 1)',
     fontWeight: '400',
@@ -124,15 +109,6 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     marginBottom: 10,
   },
-
-  productListTitle: {
-    fontWeight: '500',
-    fontSize: 14,
-    color: '#fff',
-    paddingBottom: 4,
-    paddingLeft: 8,
-    marginTop: 8,
-  },
 });
 
-export default ProductCard;
+export default HomeProductCard;
