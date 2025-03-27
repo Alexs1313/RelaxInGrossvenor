@@ -1,5 +1,6 @@
 import {
   Image,
+  Linking,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -305,28 +306,11 @@ const Profile = () => {
               padding: 16,
             }}>
             <TouchableOpacity
-              activeOpacity={0.6}
-              style={{
-                justifyContent: 'center',
-                borderBottomColor: 'rgba(153, 153, 153, 0.25)',
-                borderBottomWidth: 1,
-                marginBottom: 10,
-                paddingVertical: 18,
-              }}>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 17,
-                  fontWeight: '400',
-                }}>
-                Developer Website
-              </Text>
-              <Image
-                source={require('../../assets/tabIcons/BackArr.png')}
-                style={{position: 'absolute', right: 0}}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(
+                  'https://www.termsfeed.com/live/ef72a65f-c419-44c0-8f64-7e2c13fb27bb',
+                )
+              }
               activeOpacity={0.6}
               style={{
                 justifyContent: 'center',
@@ -349,6 +333,11 @@ const Profile = () => {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(
+                  'https://www.termsfeed.com/live/ef72a65f-c419-44c0-8f64-7e2c13fb27bb',
+                )
+              }
               activeOpacity={0.6}
               style={{
                 justifyContent: 'center',
@@ -386,7 +375,7 @@ const Profile = () => {
               height: 50,
               marginHorizontal: 16,
               borderRadius: 16,
-              marginTop: save ? 175 : 52,
+              marginTop: save ? 240 : 52,
               backgroundColor: allFieldsCompleted
                 ? '#393158'
                 : 'rgba(0, 205, 112, 1)',
