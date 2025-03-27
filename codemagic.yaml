@@ -8,7 +8,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: RelaxInGrossvenorBundleID
+        bundle_identifier: com.RelaxInGrossvenor
       vars:
         BUNDLE_ID: com.RelaxInGrossvenor
         XCODE_WORKSPACE: myApp.xcworkspace
