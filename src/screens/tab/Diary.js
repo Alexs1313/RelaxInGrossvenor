@@ -175,7 +175,7 @@ const Diary = () => {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={{marginTop: 170}}>
+          <View style={{marginTop: 250}}>
             <TouchableOpacity
               disabled={allFieldsCompleted}
               onPress={() => setOffer(!offer)}
