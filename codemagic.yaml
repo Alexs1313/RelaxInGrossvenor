@@ -27,6 +27,21 @@ workflows:
           npm install
       - name: Install CocoaPods dependencies
         script: |
+          cd ios
+          pod install --repo-update
+      - name: Clean Xcode build
+        script: |
+          cd ios
+          xcodebuild clean
+      - name: Build iOS
+        script: |
+          cd ios
+          xcodebuild build -workspace myApp.xcworkspace -scheme myApp -sdk iphoneos -configuration Release
+      - name: Install npm dependencies
+        script: |
+          npm install
+      - name: Install CocoaPods dependencies
+        script: |
           cd ios && pod install
       - name: Set up provisioning profiles
         script: |
