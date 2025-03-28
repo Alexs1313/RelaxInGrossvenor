@@ -10,9 +10,9 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.RelaxInGrossvenor
       vars:
-        BUNDLE_ID: com.RelaxInGrossvenor
-        XCODE_WORKSPACE: myApp.xcworkspace
-        XCODE_SCHEME: myApp
+        BUNDLE_ID: 'com.RelaxInGrossvenor'
+        XCODE_WORKSPACE: 'myApp.xcworkspace'
+        XCODE_SCHEME: 'myApp'
         APP_STORE_APPLE_ID: 6743849998
     scripts:
       - name: Create and set permissions for build directory
