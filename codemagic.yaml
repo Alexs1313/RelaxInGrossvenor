@@ -20,7 +20,8 @@ workflows:
           mkdir -p ios/build
           chmod -R 777 ios/build
       - name: Build iOS
-        script: cd ios && pod install
+        script: |
+          cd ios && pod install
       - name: Install npm dependencies
         script: |
           npm install
