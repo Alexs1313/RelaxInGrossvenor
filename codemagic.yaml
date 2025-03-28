@@ -15,32 +15,31 @@ workflows:
         XCODE_SCHEME: myApp
         APP_STORE_APPLE_ID: 6743849998
     scripts:
-      scripts:
-        - name: Create and set permissions for build directory
-          script: |
-            mkdir -p ios/build
-            chmod -R 777 ios/build
-        - name: Build iOS
-          script: # your build script
-        - name: Install npm dependencies
-          script: |
-            npm install
-        - name: Install CocoaPods dependencies
-          script: |
-            cd ios && pod install
-        - name: Set up provisioning profiles
-          script: |
-            xcode-project use-profiles
-        - name: Increment build number
-          script: |
-            cd ios
-            LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID")
-            agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
-        - name: Build IPA for distribution
-          script: |
-            xcode-project build-ipa \
-              --workspace "$CM_BUILD_DIR/ios/$XCODE_WORKSPACE" \
-              --scheme "$XCODE_SCHEME"
+      - name: Create and set permissions for build directory
+        script: |
+          mkdir -p ios/build
+          chmod -R 777 ios/build
+      - name: Build iOS
+        script: # your build script
+      - name: Install npm dependencies
+        script: |
+          npm install
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios && pod install
+      - name: Set up provisioning profiles
+        script: |
+          xcode-project use-profiles
+      - name: Increment build number
+        script: |
+          cd ios
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID")
+          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
+      - name: Build IPA for distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/ios/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
